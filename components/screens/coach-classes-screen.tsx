@@ -16,6 +16,7 @@ import {
   Search,
   MoreHorizontal,
   X,
+  Check,
 } from "lucide-react"
 import { Input } from "@/components/ui/input"
 import Image from "next/image"
@@ -24,6 +25,8 @@ import {
   DialogContent,
   DialogHeader,
   DialogTitle,
+  DialogDescription,
+  DialogFooter,
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
@@ -41,11 +44,11 @@ const classes = [
     enrolled: 18,
     maxStudents: 25,
     rating: 4.9,
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752131770/dexciss%20site/dexplay/optimal/400/football_x400/pexels-bohlemedia-1884576_x400_kwsrjq.jpg?height=200&width=300",
     students: [
-      { name: "Alex", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "Sarah", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "Mike", avatar: "/placeholder.svg?height=40&width=40" },
+      { name: "Alex", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217764/People%20Profile/depositphotos_223166560-stock-photo-young-handsome-indian-man-against_zv9wum.webp?height=40&width=40" },
+      { name: "Sarah", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217768/People%20Profile/0bdbc7e1f21b705d25b7f81873810086_wurlmo.jpg?height=40&width=40" },
+      { name: "Mike", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217658/People%20Profile/images_veqgag.jpg?height=40&width=40" },
     ],
     status: "active",
     nextSession: "Today 6:00 PM",
@@ -61,10 +64,10 @@ const classes = [
     enrolled: 12,
     maxStudents: 16,
     rating: 4.8,
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752131755/dexciss%20site/dexplay/optimal/400/tennis_x400/pexels-athena-2961964_x400_imcjdu.jpg?height=200&width=300",
     students: [
-      { name: "Emma", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "John", avatar: "/placeholder.svg?height=40&width=40" },
+      { name: "Emma", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217662/People%20Profile/pm0476_w0_dfthen.avif?height=40&width=40" },
+      { name: "John", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217664/People%20Profile/57dbffd654e3580d51e60e451c5850f9_hhipp8.jpg?height=40&width=40" },
     ],
     status: "upcoming",
     nextSession: "Tomorrow 5:00 PM",
@@ -80,12 +83,12 @@ const classes = [
     enrolled: 22,
     maxStudents: 30,
     rating: 4.7,
-    image: "/placeholder.svg?height=200&width=300",
+    image: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752131786/dexciss%20site/dexplay/optimal/400/basketball_x400/pexels-justinianoadriano-1905009_x400_fuypwk.jpg?height=200&width=300",
     students: [
-      { name: "David", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "Lisa", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "Tom", avatar: "/placeholder.svg?height=40&width=40" },
-      { name: "Anna", avatar: "/placeholder.svg?height=40&width=40" },
+      { name: "David", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217764/People%20Profile/depositphotos_223166560-stock-photo-young-handsome-indian-man-against_zv9wum.webp?height=40&width=40" },
+      { name: "Lisa", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217771/People%20Profile/images_1_myv2ze.jpg?height=40&width=40" },
+      { name: "Tom", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217658/People%20Profile/images_veqgag.jpg?height=40&width=40" },
+      { name: "Anna", avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217664/People%20Profile/57dbffd654e3580d51e60e451c5850f9_hhipp8.jpg?height=40&width=40" },
     ],
     status: "completed",
     nextSession: "Friday 4:00 PM",
@@ -100,6 +103,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
   const [searchQuery, setSearchQuery] = useState("")
   const [selectedFilter, setSelectedFilter] = useState("All")
   const [isCreateClassOpen, setIsCreateClassOpen] = useState(false)
+  const [showCreateSuccess, setShowCreateSuccess] = useState(false)
   const [newClass, setNewClass] = useState({
     title: "",
     sport: "",
@@ -110,6 +114,18 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
     maxStudents: 20,
     description: "",
     image: "",
+  })
+  
+  // New state for manage class functionality
+  const [managedClassId, setManagedClassId] = useState<number | null>(null)
+  const [showManageSuccess, setShowManageSuccess] = useState(false)
+  const [classForm, setClassForm] = useState({
+    title: "",
+    schedule: "",
+    time: "",
+    location: "",
+    maxStudents: 20,
+    notes: ""
   })
 
   const filters = ["All", "Active", "Upcoming", "Completed"]
@@ -138,7 +154,39 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
       image: "",
     })
     setIsCreateClassOpen(false)
+    setShowCreateSuccess(true)
   }
+
+  // New handlers for manage class
+  const handleManageClick = (classId: number) => {
+    setManagedClassId(classId)
+    // Pre-fill form with existing class data
+    const classItem = classes.find(c => c.id === classId)
+    if (classItem) {
+      setClassForm({
+        title: classItem.title,
+        schedule: classItem.schedule,
+        time: classItem.time,
+        location: classItem.location,
+        maxStudents: classItem.maxStudents,
+        notes: ""
+      })
+    }
+  }
+
+  const handleClassFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target
+    setClassForm(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleClassFormSubmit = () => {
+    // Here you would typically make an API call to update the class
+    setManagedClassId(null)
+    setShowManageSuccess(true)
+  }
+
+  // Get the current managed class data
+  const managedClass = managedClassId ? classes.find(c => c.id === managedClassId) : null
 
   return (
     <div className="bg-white min-h-screen">
@@ -155,7 +203,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
               placeholder="Search classes..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10 h-12 border-gray-200 focus:border-black"
+              className="pl-10 h-12 "
             />
           </div>
           <Button
@@ -175,7 +223,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
               onClick={() => setSelectedFilter(filter)}
               className={`flex-shrink-0 rounded-xl ${
                 selectedFilter === filter
-                  ? "bg-black text-white border-black"
+                  ? "bg-[#D7EE34] hover:bg-[#D7EE34] text-black border-black"
                   : "border-gray-200 hover:border-gray-300 bg-white"
               }`}
             >
@@ -294,7 +342,10 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
                       {classItem.enrolled} students
                     </span>
                   </div>
-                  <Button className="bg-black hover:bg-gray-800 text-white rounded-xl px-6">
+                  <Button 
+                    className="bg-black hover:bg-gray-800 text-[#D7EE34] rounded-xl px-6"
+                    onClick={() => handleManageClick(classItem.id)}
+                  >
                     Manage Class
                   </Button>
                 </div>
@@ -312,7 +363,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
       >
         <Button
           size="lg"
-          className="w-14 h-14 rounded-full bg-black hover:bg-gray-800 text-white shadow-2xl"
+          className="w-14 h-14 rounded-full bg-black hover:bg-[#D7EE34] text-white hover:text-black shadow-2xl"
           onClick={() => setIsCreateClassOpen(true)}
         >
           <Plus className="w-6 h-6" />
@@ -435,18 +486,199 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
 
           <div className="flex justify-end gap-2 mt-4">
             <Button 
+              className = "hover:bg-[#D7EE34]"
               variant="outline" 
               onClick={() => setIsCreateClassOpen(false)}
             >
               Cancel
             </Button>
             <Button 
-              className="bg-black hover:bg-gray-800 text-white"
+              className="bg-black hover:bg-[#D7EE34] text-white hover:text-black"
               onClick={handleCreateClass}
             >
               Create Class
             </Button>
           </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Create Success Dialog */}
+      <Dialog open={showCreateSuccess} onOpenChange={setShowCreateSuccess}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <Check className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center mt-3">Class Created!</DialogTitle>
+            <DialogDescription className="text-center">
+              Your new class has been successfully created.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button 
+              className="bg-black hover:bg-gray-800 text-white"
+              onClick={() => setShowCreateSuccess(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Class Dialog */}
+      <Dialog open={managedClassId !== null} onOpenChange={(open) => !open && setManagedClassId(null)}>
+        <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="text-xl">Manage Class</DialogTitle>
+            {managedClass && (
+              <div className="flex items-center gap-2 text-sm text-gray-600">
+                <Users className="w-4 h-4" />
+                <span>{managedClass.enrolled} enrolled students</span>
+              </div>
+            )}
+          </DialogHeader>
+          
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="manage-title">Class Title</Label>
+                <Input
+                  id="manage-title"
+                  name="title"
+                  value={classForm.title}
+                  onChange={handleClassFormChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="manage-maxStudents">Max Students</Label>
+                <Input
+                  id="manage-maxStudents"
+                  name="maxStudents"
+                  type="number"
+                  min="1"
+                  value={classForm.maxStudents}
+                  onChange={handleClassFormChange}
+                />
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="manage-schedule">Schedule</Label>
+                <Input
+                  id="manage-schedule"
+                  name="schedule"
+                  value={classForm.schedule}
+                  onChange={handleClassFormChange}
+                />
+              </div>
+              
+              <div className="space-y-2">
+                <Label htmlFor="manage-time">Time</Label>
+                <Input
+                  id="manage-time"
+                  name="time"
+                  value={classForm.time}
+                  onChange={handleClassFormChange}
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="manage-location">Location</Label>
+              <Input
+                id="manage-location"
+                name="location"
+                value={classForm.location}
+                onChange={handleClassFormChange}
+              />
+            </div>
+
+            {/* Student List Section */}
+            {managedClass && (
+              <div className="space-y-2">
+                <Label>Students</Label>
+                <div className="border rounded-lg p-4">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                    {managedClass.students.map((student, index) => (
+                      <div key={index} className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border">
+                          <Image
+                            src={student.avatar || "/placeholder.svg"}
+                            alt={student.name}
+                            width={40}
+                            height={40}
+                            className="object-cover"
+                          />
+                        </div>
+                        <span className="font-medium">{student.name}</span>
+                      </div>
+                    ))}
+                    {managedClass.enrolled > managedClass.students.length && (
+                      <div className="flex items-center gap-3 text-gray-500">
+                        <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                          <span className="text-sm">+{managedClass.enrolled - managedClass.students.length}</span>
+                        </div>
+                        <span>more students</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <Label htmlFor="manage-notes">Notes</Label>
+              <Textarea
+                id="manage-notes"
+                name="notes"
+                value={classForm.notes}
+                onChange={handleClassFormChange}
+                rows={4}
+                placeholder="Add any updates or notes for students..."
+              />
+            </div>
+          </div>
+
+          <div className="flex justify-end gap-2 mt-4">
+            <Button 
+              className="hover:bg-[#D7EE34]"
+              variant="outline" 
+              onClick={() => setManagedClassId(null)}
+            >
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black hover:bg-[#D7EE34] text-white hover:text-black"
+              onClick={handleClassFormSubmit}
+            >
+              Save Changes
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Success Dialog */}
+      <Dialog open={showManageSuccess} onOpenChange={setShowManageSuccess}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <Check className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center mt-3">Class Created!</DialogTitle>
+            <DialogDescription className="text-center">
+              Your class details have been successfully created.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button 
+              className="bg-black hover:bg-[#D7EE34] text-black hover:text-white"
+              onClick={() => setShowManageSuccess(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
         </DialogContent>
       </Dialog>
     </div>

@@ -191,7 +191,7 @@ export default function CoachRequestsScreen({ coach }: CoachRequestsScreenProps)
 
                   <div className="flex items-center gap-3 mb-4 p-3 bg-gray-50 rounded-xl">
                     <div className="w-10 h-10 rounded-lg overflow-hidden">
-                      <Image src={request.class.image} alt={request.class.sport} width={40} height={40} className="object-cover w-full h-full" />
+                      <Image src={request.class.image} alt={request.class.sport} width={50} height={50} className="object-cover w-full h-full" />
                     </div>
                     <div>
                       <div className="font-semibold text-gray-900">Wants to join:</div>

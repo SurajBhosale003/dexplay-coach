@@ -14,11 +14,14 @@ import {
   Camera,
 } from "lucide-react";
 import Image from "next/image";
-import Logo from "@/image/namelogo-white.png"; // adjust path based on your structure
+import Logo from "@/image/namelogo-white.png"; 
+import fulllogo from "@/public/images/fulllogo-white.png"// adjust path based on your structure
 
 interface CoachSignupFlowProps {
   onComplete: (coachData: any) => void;
 }
+
+
 
 const sports = [
   {
@@ -106,8 +109,8 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
       <div className="px-6 py-4 border-b border-gray-100">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 bg-black rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-5 h-5 text-white" />
+            <div className="w-10 h-10 rounded-lg flex items-center justify-center" style={{width:"50px", height: "80px"}}>
+               <Image src={fulllogo} width={50} height={50} className="object-cover w-full h-full" alt="logo" />
             </div>
             <div>
               <span className="text-xl font-bold text-black">
@@ -255,11 +258,12 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                   >
-                    <Card
+                    <Card 
                       className={`p-0 cursor-pointer transition-all duration-200 ${
                         formData.sport === sport.id
                           ? "ring-2 ring-black shadow-lg"
                           : "hover:shadow-md border-gray-200"
+
                       }`}
                       onClick={() => handleSportSelect(sport.id)}
                     >

@@ -15,9 +15,20 @@ import {
   Search,
   Target,
   Calendar,
+  Check,
 } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import Image from "next/image";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Label } from "@/components/ui/label";
 
 const quickMatches = [
   {
@@ -141,6 +152,107 @@ interface CoachMatchesScreenProps {
 
 export default function CoachMatchesScreen({ coach }: CoachMatchesScreenProps) {
   const [searchQuery, setSearchQuery] = useState("");
+  const [selectedMatch, setSelectedMatch] = useState<number | null>(null);
+  const [selectedStudents, setSelectedStudents] = useState<number[]>([]);
+  const [showSuccess, setShowSuccess] = useState(false);
+  
+  // New state for manage match functionality
+  const [managedMatchId, setManagedMatchId] = useState<number | null>(null);
+  const [showManageSuccess, setShowManageSuccess] = useState(false);
+  const [matchForm, setMatchForm] = useState({
+    date: "",
+    time: "",
+    venue: "",
+    notes: ""
+  });
+
+  // Mock students data
+  const students = [
+    {
+      id: 1,
+      name: "Alex Johnson",
+      avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217664/People%20Profile/57dbffd654e3580d51e60e451c5850f9_hhipp8.jpg?height=40&width=40",
+      sport: "Football",
+    },
+    {
+      id: 2,
+      name: "Sarah Wilson",
+      avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217768/People%20Profile/0bdbc7e1f21b705d25b7f81873810086_wurlmo.jpg?height=40&width=40",
+      sport: "Basketball",
+    },
+    {
+      id: 3,
+      name: "Mike Chen",
+      avatar: "https://res.cloudinary.com/de6u5kbiw/image/upload/v1752217771/People%20Profile/images_1_myv2ze.jpg?height=40&width=40",
+      sport: "Tennis",
+    }
+  ];
+
+  // Existing handlers for recommendation functionality
+  const handleRecommendClick = (matchId: number) => {
+    setSelectedMatch(matchId);
+    setSelectedStudents([]);
+  };
+
+  const toggleStudentSelection = (studentId: number) => {
+    setSelectedStudents((prev) =>
+      prev.includes(studentId)
+        ? prev.filter((id) => id !== studentId)
+        : [...prev, studentId]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedStudents.length === students.length) {
+      setSelectedStudents([]);
+    } else {
+      setSelectedStudents(students.map((student) => student.id));
+    }
+  };
+
+  const handleSendRecommendation = () => {
+    setSelectedMatch(null);
+    setShowSuccess(true);
+  };
+
+  // New handlers for manage match functionality
+  const handleManageClick = (matchId: number) => {
+    setManagedMatchId(matchId);
+    // Pre-fill form with existing match data
+    const match = coachMatches.find(m => m.id === matchId);
+    if (match) {
+      setMatchForm({
+        date: match.date.includes("Tomorrow") ? getFormattedDate(1) : 
+              match.date.includes("Friday") ? getNextFriday() : 
+              getFormattedDate(0),
+        time: match.date.split(" ")[1] || "19:00",
+        venue: match.venue,
+        notes: ""
+      });
+    }
+  };
+
+  const getFormattedDate = (daysToAdd: number) => {
+    const date = new Date();
+    date.setDate(date.getDate() + daysToAdd);
+    return date.toISOString().split('T')[0];
+  };
+
+  const getNextFriday = () => {
+    const date = new Date();
+    date.setDate(date.getDate() + (5 - date.getDay() + 7) % 7);
+    return date.toISOString().split('T')[0];
+  };
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    const { name, value } = e.target;
+    setMatchForm(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleManageSubmit = () => {
+    setManagedMatchId(null);
+    setShowManageSuccess(true);
+  };
 
   return (
     <div className="bg-white min-h-screen">
@@ -279,8 +391,9 @@ export default function CoachMatchesScreen({ coach }: CoachMatchesScreenProps) {
                         </div>
                         <Button
                           size="sm"
-                          className="mt-1 bg-black hover:bg-gray-800 text-[#D7EE34] mr-12 "
+                          className="mt-1 bg-black hover:bg-gray-800 text-[#D7EE34] mr-12"
                           style={{ marginTop: "15px" }}
+                          onClick={() => handleRecommendClick(match.id)}
                         >
                           Recommend to Students
                         </Button>
@@ -377,6 +490,7 @@ export default function CoachMatchesScreen({ coach }: CoachMatchesScreenProps) {
                           <Button
                             size="sm"
                             className="bg-black hover:bg-[#D7EE34] text-white"
+                            onClick={() => handleManageClick(match.id)}
                           >
                             Manage
                           </Button>
@@ -456,6 +570,191 @@ export default function CoachMatchesScreen({ coach }: CoachMatchesScreenProps) {
           ))}
         </TabsContent>
       </Tabs>
+
+      {/* Student Selection Dialog */}
+      <Dialog
+        open={selectedMatch !== null}
+        onOpenChange={(open) => !open && setSelectedMatch(null)}
+      >
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Recommend Match to Students</DialogTitle>
+            <DialogDescription>
+              Select students to recommend this match to
+            </DialogDescription>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="select-all"
+                checked={selectedStudents.length === students.length}
+                onCheckedChange={toggleSelectAll}
+              />
+              <Label htmlFor="select-all">Select All</Label>
+            </div>
+            <div className="border rounded-lg divide-y">
+              {students.map((student) => (
+                <div key={student.id} className="p-3 flex items-center">
+                  <Checkbox
+                    id={`student-${student.id}`}
+                    checked={selectedStudents.includes(student.id)}
+                    onCheckedChange={() => toggleStudentSelection(student.id)}
+                    className="mr-3"
+                  />
+                  <div className="flex items-center space-x-3 flex-1">
+                    <div className="w-10 h-10 rounded-full overflow-hidden">
+                      <Image
+                        src={student.avatar}
+                        alt={student.name}
+                        width={40}
+                        height={40}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                    <div>
+                      <p className="font-medium">{student.name}</p>
+                      <p className="text-sm text-gray-500">{student.sport}</p>
+                    </div>
+                  </div>
+                  {selectedStudents.includes(student.id) && (
+                    <Check className="w-5 h-5 text-green-500" />
+                  )}
+                </div>
+              ))}
+            </div>
+          </div>
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => setSelectedMatch(null)}
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSendRecommendation}
+              disabled={selectedStudents.length === 0}
+              className="bg-black hover:bg-gray-800 text-[#D7EE34]"
+            >
+              Send Recommendation
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog */}
+      <Dialog open={showSuccess} onOpenChange={setShowSuccess}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <Check className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center mt-3">
+              Recommendation Sent!
+            </DialogTitle>
+            <DialogDescription className="text-center">
+              Your match recommendation has been successfully sent to {selectedStudents.length} students.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button
+              onClick={() => setShowSuccess(false)}
+              className="bg-black hover:bg-gray-800 text-[#D7EE34]"
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Match Dialog */}
+      <Dialog open={managedMatchId !== null} onOpenChange={(open) => !open && setManagedMatchId(null)}>
+        <DialogContent className="sm:max-w-[600px]">
+          <DialogHeader>
+            <DialogTitle>Manage Match</DialogTitle>
+            <DialogDescription>
+              Update the details for this match
+            </DialogDescription>
+          </DialogHeader>
+          <div className="grid gap-4 py-4">
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="date">Date</Label>
+                <Input
+                  id="date"
+                  name="date"
+                  type="date"
+                  value={matchForm.date}
+                  onChange={handleFormChange}
+                />
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="time">Time</Label>
+                <Input
+                  id="time"
+                  name="time"
+                  type="time"
+                  value={matchForm.time}
+                  onChange={handleFormChange}
+                />
+              </div>
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="venue">Venue</Label>
+              <Input
+                id="venue"
+                name="venue"
+                value={matchForm.venue}
+                onChange={handleFormChange}
+              />
+            </div>
+            <div className="space-y-2">
+              <Label htmlFor="notes">Notes for Participants</Label>
+              <textarea
+                id="notes"
+                name="notes"
+                rows={3}
+                className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
+                value={matchForm.notes}
+                onChange={handleFormChange}
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setManagedMatchId(null)}>
+              Cancel
+            </Button>
+            <Button 
+              className="bg-black hover:bg-gray-800 text-[#D7EE34]"
+              onClick={handleManageSubmit}
+            >
+              Save Changes
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Manage Success Dialog */}
+      <Dialog open={showManageSuccess} onOpenChange={setShowManageSuccess}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <div className="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+              <Check className="h-6 w-6 text-green-600" />
+            </div>
+            <DialogTitle className="text-center mt-3">Match Updated!</DialogTitle>
+            <DialogDescription className="text-center">
+              Your match details have been successfully updated.
+            </DialogDescription>
+          </DialogHeader>
+          <DialogFooter className="sm:justify-center">
+            <Button 
+              className="bg-black hover:bg-gray-800 text-[#D7EE34]"
+              onClick={() => setShowManageSuccess(false)}
+            >
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
