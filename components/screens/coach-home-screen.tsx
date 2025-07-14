@@ -634,11 +634,11 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 100 }}
             transition={{ type: "spring", damping: 20 }}
-            className="bg-white w-full rounded-t-3xl shadow-2xl overflow-hidden"
+            className="bg-white w-full rounded-t-[32px] shadow-2xl"
             style={{ maxHeight: "90vh" }}
           >
-            {/* Header with rounded top corners */}
-            <div className="sticky top-0 bg-white z-10 p-5 border-b border-gray-200 flex justify-between items-center rounded-t-3xl">
+            {/* Header with curved top */}
+            <div className="sticky top-0 bg-white z-10 p-5 border-b border-gray-200 flex justify-between items-center rounded-t-[32px]">
               <h3 className="text-xl font-bold text-gray-800">
                 Create New Class
               </h3>
@@ -650,20 +650,23 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
               </button>
             </div>
 
-            {/* Form Content with rounded scroll area */}
-            <form
-              onSubmit={handleCreateClassSubmit}
-              className="p-5 overflow-y-auto"
+            {/* Scrollable Content */}
+            <div
+              className="overflow-y-auto"
+              style={{ maxHeight: "calc(90vh - 136px)" }}
             >
-              <div className="space-y-5">
+              <form
+                onSubmit={handleCreateClassSubmit}
+                className="p-5 space-y-5"
+              >
                 {/* Class Title */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Class Title
                   </label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newClassForm.title}
                     onChange={(e) =>
                       setNewClassForm({
@@ -678,12 +681,12 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
 
                 {/* Sport and Level */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Sport
                     </label>
                     <select
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={newClassForm.sport}
                       onChange={(e) =>
                         setNewClassForm({
@@ -693,19 +696,18 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                       }
                       required
                     >
-                      <option value="">Select a sport</option>
                       <option value="football">Football</option>
                       <option value="basketball">Basketball</option>
                       <option value="tennis">Tennis</option>
                       <option value="volleyball">Volleyball</option>
                     </select>
                   </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Level
                     </label>
                     <select
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={newClassForm.level}
                       onChange={(e) =>
                         setNewClassForm({
@@ -715,7 +717,6 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                       }
                       required
                     >
-                      <option value="">Select level</option>
                       <option value="beginner">Beginner</option>
                       <option value="intermediate">Intermediate</option>
                       <option value="advanced">Advanced</option>
@@ -725,13 +726,13 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
 
                 {/* Date and Time */}
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Date
                     </label>
                     <input
                       type="date"
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={newClassForm.date}
                       onChange={(e) =>
                         setNewClassForm({
@@ -742,13 +743,13 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                       required
                     />
                   </div>
-                  <div className="space-y-2">
-                    <label className="block text-sm font-medium text-gray-700">
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
                       Time
                     </label>
                     <input
                       type="time"
-                      className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                      className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                       value={newClassForm.time}
                       onChange={(e) =>
                         setNewClassForm({
@@ -762,14 +763,14 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </div>
 
                 {/* Max Students */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Max Students
                   </label>
                   <input
                     type="number"
                     min="1"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newClassForm.maxStudents}
                     onChange={(e) =>
                       setNewClassForm({
@@ -783,13 +784,13 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </div>
 
                 {/* Venue */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Venue
                   </label>
                   <input
                     type="text"
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     value={newClassForm.venue}
                     onChange={(e) =>
                       setNewClassForm({
@@ -803,12 +804,12 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </div>
 
                 {/* Description */}
-                <div className="space-y-2">
-                  <label className="block text-sm font-medium text-gray-700">
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
                     Description
                   </label>
                   <textarea
-                    className="w-full px-4 py-3 text-base border border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[12px] focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
                     rows={4}
                     value={newClassForm.description}
                     onChange={(e) =>
@@ -817,65 +818,73 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                         description: e.target.value,
                       })
                     }
-                    placeholder="Describe the class objectives, requirements, etc..."
+                    placeholder="Describe the class..."
                   />
                 </div>
-              </div>
-            </form>
+              </form>
+            </div>
 
-            {/* Sticky Footer with rounded bottom corners */}
-            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-3xl">
+            {/* Footer with curved bottom */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-200 p-4 rounded-b-[32px]">
               <div className="flex justify-end gap-3">
-                <button
-                  type="button"
+                <Button
+                  variant="outline"
+                  className="rounded-[12px] px-6 py-3"
                   onClick={() => setShowCreateClass(false)}
-                  className="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   Cancel
-                </button>
-                <button
+                </Button>
+                <Button
                   type="submit"
+                  className="rounded-[12px] px-6 py-3"
                   onClick={handleCreateClassSubmit}
-                  className="px-6 py-3 text-sm font-medium text-white bg-blue-600 rounded-xl hover:bg-blue-700 transition-colors"
                 >
                   Create Class
-                </button>
+                </Button>
               </div>
             </div>
           </motion.div>
         </div>
       )}
-
       {/* Manage Players Modal */}
       {showManagePlayers && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-end justify-center z-[99]">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg w-full max-w-md mx-2"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ type: "spring", damping: 25, stiffness: 120 }}
+            className="bg-white w-full rounded-t-[32px] shadow-xl"
+            style={{ maxHeight: "90vh" }}
           >
-            {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-lg font-bold">Manage Players</h3>
+            {/* Header with curved top */}
+            <div className="sticky top-0 bg-white z-10 p-5 border-b border-gray-100 flex justify-between items-center rounded-t-[32px]">
+              <h3 className="text-xl font-bold text-gray-900">
+                Manage Players
+              </h3>
               <button
                 onClick={() => setShowManagePlayers(false)}
-                className="p-1 rounded-full hover:bg-gray-100"
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors duration-200"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-6 h-6 text-gray-500 hover:text-gray-700" />
               </button>
             </div>
 
             {/* Form Content */}
-            <form onSubmit={handlePlayerFormSubmit} className="p-4">
-              <div className="space-y-4 mb-4">
+            <form
+              onSubmit={handlePlayerFormSubmit}
+              className="p-5 overflow-y-auto"
+              style={{ maxHeight: "calc(90vh - 136px)" }}
+            >
+              <div className="space-y-5">
                 {/* Player Name Field */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
                     Player Name
                   </label>
                   <input
                     type="text"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-[12px] focus:ring-2 focus:ring-[#D7EE34] focus:border-[#D7EE34] transition-all"
                     value={playerForm.name}
                     onChange={(e) =>
                       setPlayerForm({ ...playerForm, name: e.target.value })
@@ -886,13 +895,13 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </div>
 
                 {/* Email Field */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
                     Email
                   </label>
                   <input
                     type="email"
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-[12px] focus:ring-2 focus:ring-[#D7EE34] focus:border-[#D7EE34] transition-all"
                     value={playerForm.email}
                     onChange={(e) =>
                       setPlayerForm({ ...playerForm, email: e.target.value })
@@ -903,12 +912,12 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </div>
 
                 {/* Class Selector */}
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-1">
+                <div className="space-y-2">
+                  <label className="block text-sm font-medium text-gray-700">
                     Class
                   </label>
                   <select
-                    className="w-full px-3 py-2 border border-gray-300 rounded-md text-sm focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 border border-gray-200 rounded-[12px] focus:ring-2 focus:ring-[#D7EE34] focus:border-[#D7EE34] transition-all appearance-none bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyNCIgaGVpZ2h0PSIyNCIgdmlld0JveD0iMCAwIDI0IDI0IiBmaWxsPSJub25lIiBzdHJva2U9IiAjd2ZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCI+PHBvbHlsaW5lIHBvaW50cz0iNiA5IDEyIDE1IDE4IDkiPjwvcG9seWxpbmU+PC9zdmc+')] bg-no-repeat bg-[right_1rem_center] bg-[length:1.25rem]"
                     value={playerForm.class}
                     onChange={(e) =>
                       setPlayerForm({ ...playerForm, class: e.target.value })
@@ -917,32 +926,38 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                   >
                     <option value="">Select a class</option>
                     {upcomingClasses.map((cls) => (
-                      <option key={cls.id} value={cls.title}>
+                      <option
+                        key={cls.id}
+                        value={cls.title}
+                        className="text-gray-900"
+                      >
                         {cls.title}
                       </option>
                     ))}
                   </select>
                 </div>
               </div>
+            </form>
 
-              {/* Form Actions */}
-              <div className="flex justify-end gap-2 pt-2">
-                <Button
+            {/* Footer with curved bottom */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 rounded-b-[32px]">
+              <div className="flex justify-end gap-3">
+                <button
                   type="button"
-                  variant="outline"
-                  className="h-10 px-4 text-sm"
                   onClick={() => setShowManagePlayers(false)}
+                  className="px-6 py-3 text-sm font-medium text-gray-700 bg-white border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors duration-200"
                 >
                   Cancel
-                </Button>
-                <Button
+                </button>
+                <button
                   type="submit"
-                  className="h-10 px-4 text-sm bg-black text-white hover:bg-[#D7EE34] hover:text-black"
+                  onClick={handlePlayerFormSubmit}
+                  className="px-6 py-3 text-sm font-medium text-white bg-gray-900 rounded-[12px] hover:bg-[#D7EE34] hover:text-gray-900 transition-colors duration-200"
                 >
                   Save Player
-                </Button>
+                </button>
               </div>
-            </form>
+            </div>
           </motion.div>
         </div>
       )}
