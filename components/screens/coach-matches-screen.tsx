@@ -668,70 +668,77 @@ export default function CoachMatchesScreen({ coach }: CoachMatchesScreenProps) {
 
       {/* Manage Match Dialog */}
       <Dialog open={managedMatchId !== null} onOpenChange={(open) => !open && setManagedMatchId(null)}>
-        <DialogContent className="sm:max-w-[600px]">
-          <DialogHeader>
-            <DialogTitle>Manage Match</DialogTitle>
-            <DialogDescription>
-              Update the details for this match
-            </DialogDescription>
-          </DialogHeader>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="date">Date</Label>
-                <Input
-                  id="date"
-                  name="date"
-                  type="date"
-                  value={matchForm.date}
-                  onChange={handleFormChange}
-                />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="time">Time</Label>
-                <Input
-                  id="time"
-                  name="time"
-                  type="time"
-                  value={matchForm.time}
-                  onChange={handleFormChange}
-                />
-              </div>
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="venue">Venue</Label>
-              <Input
-                id="venue"
-                name="venue"
-                value={matchForm.venue}
-                onChange={handleFormChange}
-              />
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="notes">Notes for Participants</Label>
-              <textarea
-                id="notes"
-                name="notes"
-                rows={3}
-                className="flex w-full rounded-md border border-gray-200 bg-white px-3 py-2 text-sm"
-                value={matchForm.notes}
-                onChange={handleFormChange}
-              />
-            </div>
-          </div>
-          <DialogFooter>
-            <Button variant="outline" onClick={() => setManagedMatchId(null)}>
-              Cancel
-            </Button>
-            <Button 
-              className="bg-black hover:bg-gray-800 text-[#D7EE34]"
-              onClick={handleManageSubmit}
-            >
-              Save Changes
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+  <DialogContent className="sm:max-w-[600px] rounded-lg">
+    <DialogHeader>
+      <DialogTitle className="text-xl">Manage Match</DialogTitle>
+      <DialogDescription className="text-sm">
+        Update the details for this match
+      </DialogDescription>
+    </DialogHeader>
+    <div className="grid gap-4 py-4">
+      <div className="grid grid-cols-2 gap-4">
+        <div className="space-y-2">
+          <Label htmlFor="date">Date</Label>
+          <Input
+            id="date"
+            name="date"
+            type="date"
+            value={matchForm.date}
+            onChange={handleFormChange}
+            className="rounded-lg"
+          />
+        </div>
+        <div className="space-y-2">
+          <Label htmlFor="time">Time</Label>
+          <Input
+            id="time"
+            name="time"
+            type="time"
+            value={matchForm.time}
+            onChange={handleFormChange}
+            className="rounded-lg"
+          />
+        </div>
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="venue">Venue</Label>
+        <Input
+          id="venue"
+          name="venue"
+          value={matchForm.venue}
+          onChange={handleFormChange}
+          className="rounded-lg"
+        />
+      </div>
+      <div className="space-y-2">
+        <Label htmlFor="notes">Notes for Participants</Label>
+        <textarea
+          id="notes"
+          name="notes"
+          rows={3}
+          className="flex w-full rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm"
+          value={matchForm.notes}
+          onChange={handleFormChange}
+        />
+      </div>
+    </div>
+    <DialogFooter>
+      <Button 
+        variant="outline" 
+        onClick={() => setManagedMatchId(null)}
+        className="rounded-lg"
+      >
+        Cancel
+      </Button>
+      <Button 
+        className="bg-black hover:bg-gray-800 text-[#D7EE34] rounded-lg"
+        onClick={handleManageSubmit}
+      >
+        Save Changes
+      </Button>
+    </DialogFooter>
+  </DialogContent>
+</Dialog>
 
       {/* Manage Success Dialog */}
       <Dialog open={showManageSuccess} onOpenChange={setShowManageSuccess}>

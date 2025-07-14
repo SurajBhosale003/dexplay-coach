@@ -836,7 +836,7 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 </Button>
                 <Button
                   type="submit"
-                  className="rounded-[12px] px-6 py-3"
+                  className="rounded-[12px] px-6 py-3 bg-[#D7EE34] text-black"
                   onClick={handleCreateClassSubmit}
                 >
                   Create Class
@@ -940,7 +940,7 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
             </form>
 
             {/* Footer with curved bottom */}
-            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 rounded-b-[32px]">
+            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 rounded-b-[32px] items-center">
               <div className="flex justify-end gap-3">
                 <button
                   type="button"
@@ -952,7 +952,7 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
                 <button
                   type="submit"
                   onClick={handlePlayerFormSubmit}
-                  className="px-6 py-3 text-sm font-medium text-white bg-gray-900 rounded-[12px] hover:bg-[#D7EE34] hover:text-gray-900 transition-colors duration-200"
+                  className="px-6 py-3 text-sm font-medium text-black bg-[#D7EE34] rounded-[12px] hover:bg-[#D7EE34] hover:white transition-colors duration-200"
                 >
                   Save Player
                 </button>
@@ -964,55 +964,90 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
 
       {/* Quick Match Requests Modal */}
       {showQuickMatch && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black bg-opacity-90 flex items-end justify-center z-[99]">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg p-4 w-full max-w-md mx-2"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: "spring", damping: 25, stiffness: 120 }}
+            className="bg-white w-full rounded-t-[32px] shadow-2xl"
+            style={{ maxHeight: "90vh" }}
           >
-            <div className="flex justify-between items-center mb-4">
-              <h3 className="text-lg font-bold">Match Requests</h3>
-              <button onClick={() => setShowQuickMatch(false)} className="p-1">
-                <X className="w-5 h-5 text-gray-500" />
+            {/* Header with curved top */}
+            <div className="sticky top-0 bg-white z-10 p-5 border-b border-gray-100 flex justify-between items-center rounded-t-[32px]">
+              <h3 className="text-xl font-bold text-gray-900">
+                Match Requests
+              </h3>
+              <button
+                onClick={() => setShowQuickMatch(false)}
+                className="p-2 rounded-full hover:bg-gray-100 transition-colors"
+              >
+                <X className="w-6 h-6 text-gray-500 hover:text-gray-700" />
               </button>
             </div>
-            <div className="space-y-3 max-h-[70vh] overflow-y-auto">
-              {matchRequests.map((request) => (
-                <Card key={request.id} className="p-3">
-                  <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-3">
-                    <div className="flex-1">
-                      <h4 className="font-bold text-sm sm:text-base">
-                        {request.team}
-                      </h4>
-                      <p className="text-xs sm:text-sm text-gray-600">
-                        {request.date} at {request.venue}
-                      </p>
-                      <Badge className="mt-1 text-xs bg-[#D7EE34] text-black">
-                        {request.level}
-                      </Badge>
-                    </div>
-                    <div className="flex gap-2 self-end sm:self-auto">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        className="text-red-500 text-xs sm:text-sm h-8"
-                        onClick={() => handleMatchAction(request.id, "reject")}
-                      >
-                        <X className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Reject
-                      </Button>
-                      <Button
-                        size="sm"
-                        className="text-xs sm:text-sm h-8"
-                        onClick={() => handleMatchAction(request.id, "accept")}
-                      >
-                        <Check className="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-                        Accept
-                      </Button>
+
+            {/* Match Requests List */}
+            <div
+              className="overflow-y-auto p-5"
+              style={{ maxHeight: "calc(90vh - 136px)" }}
+            >
+              <div className="space-y-4">
+                {matchRequests.map((request) => (
+                  <div
+                    key={request.id}
+                    className="p-4 border border-gray-200 rounded-[16px] hover:shadow-sm transition-all"
+                  >
+                    <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
+                      {/* Team Info */}
+                      <div className="flex-1 space-y-2">
+                        <h4 className="font-bold text-base text-gray-900">
+                          {request.team}
+                        </h4>
+                        <div className="flex items-center text-sm text-gray-600">
+                          <Calendar className="w-4 h-4 mr-2" />
+                          <span>
+                            {request.date} at {request.venue}
+                          </span>
+                        </div>
+                        <span className="inline-block px-3 py-1 text-xs font-medium rounded-full bg-[#D7EE34] text-gray-900">
+                          {request.level}
+                        </span>
+                      </div>
+
+                      {/* Action Buttons */}
+                      <div className="flex gap-3 self-end sm:self-auto">
+                        <button
+                          onClick={() =>
+                            handleMatchAction(request.id, "reject")
+                          }
+                          className="px-4 py-2 text-sm font-medium text-red-500 bg-white border border-red-100 rounded-[12px] hover:bg-red-50 transition-colors flex items-center"
+                        >
+                          <X className="w-4 h-4 mr-2" />
+                          Reject
+                        </button>
+                        <button
+                          onClick={() =>
+                            handleMatchAction(request.id, "accept")
+                          }
+                          className="px-4 py-2 text-sm font-medium text-white bg-gray-900 rounded-[12px] hover:bg-[#D7EE34] hover:text-gray-900 transition-colors flex items-center"
+                        >
+                          <Check className="w-4 h-4 mr-2" />
+                          Accept
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </Card>
-              ))}
+                ))}
+              </div>
+            </div>
+
+            {/* Footer with curved bottom */}
+            <div className="sticky bottom-0 bg-white border-t border-gray-100 p-4 rounded-b-[32px]">
+              <button
+                onClick={() => setShowQuickMatch(false)}
+                className="w-full py-3 text-sm font-medium text-gray-700 bg-[#D7EE34] border border-gray-200 rounded-[12px] hover:bg-gray-50 transition-colors"
+              >
+                Close
+              </button>
             </div>
           </motion.div>
         </div>
@@ -1020,46 +1055,52 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
 
       {/* Review Attendance Modal */}
       {showAttendance && !showAttendanceDetails && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4 py-6">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-end justify-center z-[99] md:items-center md:p-4">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg w-full max-w-md mx-2"
+            initial={{ opacity: 0, y: 100 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 100 }}
+            transition={{ type: "spring", damping: 25 }}
+            className="bg-white w-full max-w-md rounded-t-2xl md:rounded-2xl shadow-xl"
           >
             {/* Header */}
-            <div className="flex justify-between items-center p-4 border-b">
-              <h3 className="text-lg font-bold">Review Attendance</h3>
+            <div className="flex justify-between items-center p-5 border-b">
+              <h3 className="text-xl font-bold text-gray-800">
+                Review Attendance
+              </h3>
               <button
                 onClick={() => setShowAttendance(false)}
-                className="p-1 rounded-full hover:bg-gray-100"
+                className="p-1.5 rounded-full hover:bg-gray-100 transition-colors"
               >
-                <X className="w-5 h-5 text-gray-500" />
+                <X className="w-6 h-6 text-gray-500" />
               </button>
             </div>
 
             {/* Content */}
-            <div className="p-4">
-              <h4 className="font-medium mb-2">Today's Classes</h4>
-              <div className="space-y-2 max-h-[60vh] overflow-y-auto">
+            <div className="p-5">
+              <h4 className="font-medium text-gray-700 mb-3">
+                Today's Classes
+              </h4>
+              <div className="space-y-3 max-h-[60vh] overflow-y-auto pr-2 -mr-2">
                 {upcomingClasses
                   .filter((cls) => cls.time.includes("Today"))
                   .map((cls) => (
                     <div
                       key={cls.id}
-                      className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
+                      className="flex items-center justify-between p-4 bg-[#d8ee34de] rounded-xl hover:bg-gray-100 transition-colors"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="font-medium text-sm truncate">
+                        <p className="font-medium text-gray-900 truncate">
                           {cls.title}
                         </p>
-                        <p className="text-xs text-gray-500 mt-1">
+                        <p className="text-sm text-gray-500 mt-1">
                           {cls.students}/{cls.maxStudents} attended
                         </p>
                       </div>
                       <Button
                         variant="outline"
                         size="sm"
-                        className="text-xs h-8 px-2 whitespace-nowrap"
+                        className="h-9 px-3 whitespace-nowrap border-gray-300 hover:bg-white"
                         onClick={() => handleViewAttendanceDetails(cls.id)}
                       >
                         Details
@@ -1070,19 +1111,19 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
             </div>
 
             {/* Footer */}
-            <div className="flex justify-end gap-2 p-4 border-t">
+            <div className="flex justify-end gap-3 p-5 border-t">
               <Button
                 variant="outline"
-                className="text-sm h-10 px-4"
+                className="h-11 px-6 text-gray-700 border-gray-300 hover:bg-[#D7EE34] "
                 onClick={() => setShowAttendance(false)}
               >
                 Cancel
               </Button>
               <Button
-                className="text-sm h-10 px-4"
+                className="h-11 px-6 bg-[#D7EE34] text-black"
                 onClick={handleAttendanceSubmit}
               >
-                Save
+                Save Changes
               </Button>
             </div>
           </motion.div>
@@ -1091,96 +1132,126 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
 
       {/* Attendance Details Modal */}
       {showAttendanceDetails && currentAttendanceClass && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex items-end justify-center z-[99] md:items-center">
+          {/* Overlay with click-to-close functionality */}
+          <div
+            className="absolute inset-0"
+            onClick={() => setShowAttendanceDetails(false)}
+          />
+
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            className="bg-white rounded-lg w-full max-w-md mx-2 flex flex-col"
-            style={{ maxHeight: "90vh" }}
+            initial={{ opacity: 0, y: "100%" }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: "100%" }}
+            transition={{
+              type: "spring",
+              damping: 20,
+              stiffness: 300,
+            }}
+            className="relative bg-white w-full max-w-md rounded-t-3xl md:rounded-2xl shadow-2xl flex flex-col border border-gray-100"
+            style={{
+              maxHeight: "90vh",
+              height: "fit-content",
+              minHeight: "60vh",
+            }}
           >
+            {/* Draggable handle (for mobile) */}
+            <div className="py-2 flex justify-center sticky top-0 z-20 bg-white rounded-t-3xl md:hidden">
+              <div className="w-12 h-1.5 bg-gray-200 rounded-full" />
+            </div>
+
             {/* Header */}
-            <div className="flex items-center p-4 border-b sticky top-0 bg-white z-10">
+            <div className="flex items-center p-6 pb-4 border-b sticky top-0 bg-white z-10">
               <button
                 onClick={handleBackToAttendance}
-                className="mr-2 p-1 rounded-full hover:bg-gray-100"
+                className="mr-3 p-2 rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
               >
-                <ChevronLeft className="w-5 h-5 text-gray-600" />
+                <ChevronLeft className="w-6 h-6 text-gray-600" />
               </button>
-              <h3 className="text-lg font-bold flex-1 truncate">
+              <h3 className="text-2xl font-bold text-gray-900 flex-1 truncate">
                 {currentAttendanceClass.title}
               </h3>
               <button
                 onClick={() => setShowAttendanceDetails(false)}
-                className="p-1 rounded-full hover:bg-gray-100"
+                className="p-2 rounded-full hover:bg-gray-50 active:bg-gray-100 transition-colors"
               >
-                <X className="w-5 h-5 text-gray-600" />
+                <X className="w-6 h-6 text-gray-600" />
               </button>
             </div>
 
             {/* Class Info */}
-            <div className="p-4 border-b">
-              <div className="flex justify-between items-center mb-2">
-                <span className="text-sm text-gray-600 flex items-center">
-                  <Clock className="w-4 h-4 mr-2 flex-shrink-0" />
+            <div className="p-6 pt-4 border-b">
+              <div className="flex justify-between items-center mb-4">
+                <span className="text-base text-gray-600 flex items-center">
+                  <Clock className="w-5 h-5 mr-2 flex-shrink-0" />
                   <span className="truncate">
                     {currentAttendanceClass.time}
                   </span>
                 </span>
-                <Badge variant="secondary" className="text-xs py-1">
+                <Badge
+                  variant="secondary"
+                  className="text-sm py-1.5 px-3 font-medium bg-[#D7EE34]" 
+                >
                   {currentAttendanceClass.level}
                 </Badge>
               </div>
-              <div className="text-sm text-gray-600 flex items-center">
-                <Users className="w-4 h-4 mr-2 flex-shrink-0" />
+              <div className="text-base text-gray-600 flex items-center">
+                <Users className="w-5 h-5 mr-2 flex-shrink-0" />
                 {currentAttendanceClass.students.length} students
               </div>
             </div>
 
             {/* Student List */}
-            <div className="flex-1 overflow-y-auto px-4 py-2">
-              <div className="space-y-2">
-                {currentAttendanceClass.students.map((student: any) => (
-                  <div
-                    key={student.id}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
-                    <div className="flex items-center min-w-0">
-                      <div className="relative w-9 h-9 rounded-full overflow-hidden flex-shrink-0 mr-3">
-                        <Image
-                          src={student.avatar || "/placeholder.svg"}
-                          alt={student.name}
-                          fill
-                          className="object-cover"
-                          sizes="(max-width: 640px) 36px, 36px"
-                        />
-                      </div>
-                      <span className="font-medium text-sm truncate">
-                        {student.name}
-                      </span>
+            <div className="flex-1 overflow-y-auto px-6 py-4 space-y-3">
+              {currentAttendanceClass.students.map((student: any) => (
+                <motion.div
+                  key={student.id}
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.2 }}
+                  className="flex items-center justify-between p-4 border rounded-xl hover:bg-gray-50 active:bg-gray-100 transition-colors"
+                >
+                  <div className="flex items-center min-w-0 flex-1">
+                    <div className="relative w-11 h-11 rounded-full overflow-hidden flex-shrink-0 mr-3 border-2 border-gray-100">
+                      <Image
+                        src={student.avatar || "/placeholder-user.svg"}
+                        alt={student.name}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 44px, 44px"
+                      />
                     </div>
-                    <Badge
-                      variant={
-                        student.status === "present"
-                          ? "default"
-                          : student.status === "late"
-                          ? "secondary"
-                          : "destructive"
-                      }
-                      className="text-xs py-1 px-2.5"
-                    >
-                      {student.status.charAt(0).toUpperCase() +
-                        student.status.slice(1)}
-                    </Badge>
+                    <span className="font-medium text-gray-900 truncate">
+                      {student.name}
+                    </span>
                   </div>
-                ))}
-              </div>
+                  <Badge
+                    variant={
+                      student.status === "present"
+                        ? "default"
+                        : student.status === "late"
+                        ? "secondary"
+                        : "destructive"
+                    }
+                    className="text-sm py-1.5 px-3 capitalize font-medium min-w-[80px] text-center"
+                  >
+                    {student.status === "present" ? (
+                      <span>Present</span>
+                    ) : student.status === "late" ? (
+                      <span>Late</span>
+                    ) : (
+                      <span>Absent</span>
+                    )}
+                  </Badge>
+                </motion.div>
+              ))}
             </div>
 
             {/* Footer */}
-            <div className="p-4 border-t sticky bottom-0 bg-white">
+            <div className="p-6 border-t sticky bottom-0 bg-white">
               <Button
                 variant="outline"
-                className="w-full h-11"
+                className="w-full h-14 text-gray-700 border-gray-300 hover:bg-gray-50 bg-[#D7EE34] transition-colors text-base font-medium rounded-xl"
                 onClick={() => setShowAttendanceDetails(false)}
               >
                 Close
@@ -1189,14 +1260,13 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
           </motion.div>
         </div>
       )}
-
       {/* Success Message Toast */}
       {showSuccessMessage && (
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 20 }}
-          className="fixed bottom-20 right-3 bg-green-500 text-white px-2 py-2 rounded-md shadow-lg flex items-center"
+          className="fixed bottom-20 right-3 bg-[#D7EE34] text-black px-2 py-2 rounded-md shadow-lg flex items-center"
           style={{ marginBottom: "20px", marginLeft: "9px" }}
         >
           <Check className="w-5 h-5 mr-2" />
