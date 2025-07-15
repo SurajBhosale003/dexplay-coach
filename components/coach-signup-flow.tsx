@@ -267,7 +267,7 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
                       }`}
                       onClick={() => handleSportSelect(sport.id)}
                     >
-                      <div className="flex items-center p-4">
+                      <div className="flex items-center p-4 bg-white hover:bg-[#d8ee34a6]">
                         <div className="relative w-20 h-16 rounded-lg overflow-hidden mr-4">
                           <Image
                             src={sport.image || "/placeholder.svg"}
@@ -280,12 +280,12 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
                           <h3 className="font-bold text-gray-900 text-lg">
                             {sport.name}
                           </h3>
-                          <p className="text-[#D7EE34] text-sm">
+                          <p className="text-[#D7EE34] hover:text-black text-sm font-bold-semibold">
                             {sport.coaches}
                           </p>
                         </div>
                         {formData.sport === sport.id && (
-                          <Check className="w-6 h-6 text-[#D7EE34]" />
+                          <Check className="w-6 h-6 text-black" />
                         )}
                       </div>
                     </Card>
@@ -377,7 +377,7 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
               <Button
                 onClick={() => setStep(4)}
                 disabled={!formData.experience}
-                className="w-full h-14 bg-black hover:bg-[#D7EE34] text-white hover:text-black font-semibold rounded-xl text-lg mt-12" style={{marginBottom: "30px"}}
+                className="w-full h-14 bg-black hover:bg-[#D7EE34] text-white hover:text-black font-semibold rounded-xl text-lg mt-12" style={{ marginBottom: "30px" }}
               >
                 Continue
                 <ArrowRight className="w-5 h-5 ml-2" />
@@ -437,7 +437,7 @@ export default function CoachSignupFlow({ onComplete }: CoachSignupFlowProps) {
                 Verify & Continue
               </Button>
 
-              <p className="text-center text-sm text-gray-500">
+              <p className="text-center text-sm text-gray-500 " style={{ marginBottom: "20px" }}>
                 Code will auto-fill in 2 seconds...
               </p>
             </motion.div>
