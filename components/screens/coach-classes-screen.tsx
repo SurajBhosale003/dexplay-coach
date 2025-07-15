@@ -364,7 +364,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
       >
         <Button
           size="lg"
-          className="w-14 h-14 rounded-full bg-black hover:bg-[#D7EE34] text-white hover:text-black shadow-2xl"
+          className="w-14 h-14 rounded-full bg-[#D7EE34] hover:bg-black text-black  hover:text-white shadow-2xl"
           onClick={() => setIsCreateClassOpen(true)}
         >
           <Plus className="w-6 h-6" />
@@ -494,7 +494,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
               Cancel
             </Button>
             <Button 
-              className="bg-black hover:bg-[#D7EE34] text-white hover:text-black"
+              className="bg-[#D7EE34] hover:bg-black text-black hover:text-white"
               onClick={handleCreateClass}
             >
               Create Class
@@ -651,7 +651,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
               Cancel
             </Button>
             <Button 
-              className="bg-black hover:bg-[#D7EE34] text-white hover:text-black"
+              className="bg-[#D7EE34] hover:bg-black text-black hover:text-white"
               onClick={handleClassFormSubmit}
             >
               Save Changes

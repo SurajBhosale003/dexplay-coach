@@ -65,7 +65,7 @@ const quickActions = [
   },
   {
     id: "manage-players",
-    title: "Manage Players",
+    title: "Manage Players List",
     description: "View and organize your athletes",
     icon: Users,
     color: "bg-green-500",
@@ -860,7 +860,7 @@ export default function CoachHomeScreen({ coach }: CoachHomeScreenProps) {
             {/* Header with curved top */}
             <div className="sticky top-0 bg-white z-10 p-5 border-b border-gray-100 flex justify-between items-center rounded-t-[32px]">
               <h3 className="text-xl font-bold text-gray-900">
-                Manage Players
+                Manage Players List
               </h3>
               <button
                 onClick={() => setShowManagePlayers(false)}
