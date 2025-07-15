@@ -184,6 +184,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
     setManagedClassId(null)
     setShowManageSuccess(true)
   }
+  
 
   // Get the current managed class data
   const managedClass = managedClassId ? classes.find(c => c.id === managedClassId) : null
@@ -371,7 +372,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
       </motion.div>
 
       {/* Create Class Dialog */}
-      <Dialog open={isCreateClassOpen} onOpenChange={setIsCreateClassOpen}>
+      <Dialog open={isCreateClassOpen} onOpenChange={setIsCreateClassOpen} >
         <DialogContent className="sm:max-w-2xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle className="text-xl">Create New Class</DialogTitle>
@@ -673,7 +674,7 @@ export default function CoachClassesScreen({ coach }: CoachClassesScreenProps) {
           </DialogHeader>
           <DialogFooter className="sm:justify-center">
             <Button 
-              className="bg-black hover:bg-[#D7EE34] text-black hover:text-white"
+              className="bg-black hover:bg-[#D7EE34] text-white hover:text-black"
               onClick={() => setShowManageSuccess(false)}
             >
               Close
