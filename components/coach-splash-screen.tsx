@@ -4,7 +4,7 @@ import { motion } from "framer-motion"
 import { Button } from "@/components/ui/button"
 import { GraduationCap, ArrowRight } from "lucide-react"
 import Image from "next/image"
-
+import fulllogo from "@/image/namelogo-white.png"
 interface CoachSplashScreenProps {
   onComplete: () => void
 }
@@ -21,12 +21,16 @@ export default function CoachSplashScreen({ onComplete }: CoachSplashScreenProps
       <div className="flex-1 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-transparent via-transparent to-white/90 z-10" />
         <Image
-          src="/placeholder.svg?height=600&width=400"
-          alt="Coach training athletes"
-          fill
-          className="object-cover"
-          priority
-        />
+                  src={fulllogo}
+                  alt="Coaching Sport"
+                  width={300}
+                  height={300}
+                  className="w-5 h-5 mx-auto mb-2"
+                  style={{
+                    width: "300px",
+                    height: "300px",
+                  }}
+                />
 
         {/* Logo */}
         <motion.div
@@ -35,7 +39,7 @@ export default function CoachSplashScreen({ onComplete }: CoachSplashScreenProps
           transition={{ delay: 0.5, duration: 0.8 }}
           className="absolute top-16 left-6 z-20"
         >
-          <div className="flex items-center gap-3">
+          {/* <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-black rounded-lg flex items-center justify-center">
               <GraduationCap className="w-6 h-6 text-white" />
             </div>
@@ -43,7 +47,7 @@ export default function CoachSplashScreen({ onComplete }: CoachSplashScreenProps
               <span className="text-2xl font-bold text-black">DexPlay</span>
               <div className="text-sm text-gray-600 font-medium">Coach</div>
             </div>
-          </div>
+          </div> */}
         </motion.div>
       </div>
 
@@ -62,7 +66,7 @@ export default function CoachSplashScreen({ onComplete }: CoachSplashScreenProps
         <div className="space-y-4">
           <Button
             onClick={onComplete}
-            className="w-full h-14 bg-black hover:bg-gray-800 text-white font-semibold rounded-xl text-lg"
+            className="w-full h-14 bg-[#D7EE34]  text-black font-semibold rounded-xl text-lg"
           >
             Start Coaching
             <ArrowRight className="w-5 h-5 ml-2" />
